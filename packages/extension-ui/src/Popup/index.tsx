@@ -78,6 +78,7 @@ export default function Popup (): React.ReactElement {
   const [isWelcomeDone, setWelcomeDone] = useState(false);
   const [settingsCtx, setSettingsCtx] = useState<SettingsStruct>(startSettings);
   const history = useHistory();
+  console.log('accounts',accounts)
 
   const _onAction = useCallback(
     (to?: string): void => {

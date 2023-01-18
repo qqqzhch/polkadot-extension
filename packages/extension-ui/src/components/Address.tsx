@@ -110,7 +110,8 @@ function Address ({ actions, address, children, className, genesisHash, isExtern
   const { show } = useToast();
 
   useOutsideClick([actIconRef, actMenuRef], () => (showActionsMenu && setShowActionsMenu(!showActionsMenu)));
-
+  console.log('address components',address,formatted)
+  console.log('address components formatted',formatted)
   useEffect((): void => {
     if (!address) {
       return setRecoded(defaultRecoded);
