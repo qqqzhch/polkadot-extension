@@ -29,7 +29,7 @@ interface EditState {
 }
 
 function Account ({ address, className, genesisHash, isExternal, isHardware, isHidden, name, parentName, showVisibilityAction, suri, type, withCheckbox = false, withMenu = true }: Props): React.ReactElement<Props> {
-  console.log('address',address)
+  console.log('address', address);
   const { t } = useTranslation();
   const [{ isEditing, toggleActions }, setEditing] = useState<EditState>({ isEditing: false, toggleActions: 0 });
   const [editedName, setName] = useState<string | undefined | null>(name);
