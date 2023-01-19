@@ -26,6 +26,9 @@ module.exports = (entry, alias = {}) => ({
   context: __dirname,
   devtool: false,
   entry,
+  experiments: {
+    asyncWebAssembly: true
+  },
   module: {
     rules: [
       {

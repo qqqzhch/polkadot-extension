@@ -14,6 +14,7 @@ import useGenesisHashOptions from '../../hooks/useGenesisHashOptions';
 import useTranslation from '../../hooks/useTranslation';
 import { editAccount, tieAccount } from '../../messaging';
 import { Name } from '../../partials';
+import Blance from './Blance';
 
 interface Props extends AccountJson {
   className?: string;
@@ -147,6 +148,7 @@ function Account ({ address, className, genesisHash, isExternal, isHardware, isH
         suri={suri}
         toggleActions={toggleActions}
       >
+        <Blance address={address}></Blance>
         {isEditing && (
           <Name
             address={address}
@@ -156,6 +158,7 @@ function Account ({ address, className, genesisHash, isExternal, isHardware, isH
             onBlur={_saveChanges}
             onChange={setName}
           />
+
         )}
       </Address>
     </div>

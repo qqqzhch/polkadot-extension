@@ -5,8 +5,6 @@ import type { MetadataDefBase } from '@polkadot/extension-inject/types';
 
 import { selectableNetworks } from '@polkadot/networks';
 
-
-
 // https://github.com/paritytech/ss58-registry/blob/HEAD/ss58-registry.json
 
 // add manta network  to selectableNetworks
