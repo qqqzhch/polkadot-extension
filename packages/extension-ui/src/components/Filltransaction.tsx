@@ -64,7 +64,7 @@ function Filltransaction ({ address, buttonLabel, isBusy, onAmountChange, onBack
         onChange={_onAmountChange}
       />
       <div style={{ marginLeft: 15 }}>
-      Balance:{balance ? display(balance) : 'loading'}
+      Balance:{balance !== undefined ? display(balance) : 'loading'}
       </div>
       <PasswordTx
         onChange={_onPasswordChange}

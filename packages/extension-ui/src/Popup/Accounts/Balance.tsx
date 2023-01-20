@@ -31,12 +31,15 @@ function Blance ({ address, children, className }: Props): React.ReactElement<Pr
     className='accountBalance'
     style={{ marginLeft: 70 }}
   >
-    <span className='balance'>
+    <span
+      className='balance'
+      style={{ display: 'inline-block', width: 300 }}
+    >
       {accountbalance !== undefined ? display(accountbalance) : 'loading'}
     </span>
     <span
       className='send'
-      style={{ marginLeft: 70 }}
+      style={{ marginLeft: 5 }}
     >
     send
     </span>
