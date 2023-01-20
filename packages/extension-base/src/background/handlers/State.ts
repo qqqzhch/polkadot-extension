@@ -7,6 +7,7 @@ import type { AccountJson, AuthorizeRequest, MetadataRequest, RequestAuthorizeTa
 
 import { BehaviorSubject } from 'rxjs';
 
+import { ApiPromise, WsProvider } from '@polkadot/api';
 import { getId } from '@polkadot/extension-base/utils/getId';
 import { addMetadata, knownMetadata } from '@polkadot/extension-chains';
 import { knownGenesis } from '@polkadot/networks/defaults';
@@ -150,6 +151,7 @@ export default class State {
   readonly #providers: Providers;
 
   readonly #signRequests: Record<string, SignRequest> = {};
+  public API: ApiPromise;
 
   #windows: number[] = [];
 
@@ -179,6 +181,8 @@ export default class State {
     const previousDefaultAuth = JSON.parse(defaultAuthString) as string[];
 
     this.defaultAuthAccountSelection = previousDefaultAuth;
+    // eslint-disable-next-line  @typescript-eslint/no-floating-promises
+    this.setAPI();
   }
 
   public get knownMetadata (): MetadataDef[] {
@@ -576,5 +580,26 @@ export default class State {
       this.updateIconSign();
       this.popupOpen();
     });
+  }
+
+  public signInner (request: RequestSign, account: AccountJson): Promise<ResponseSigning> {
+    const id = getId();
+
+    return new Promise((resolve, reject): void => {
+      const result = {
+        ...this.signComplete(id, resolve, reject)
+
+      };
+
+      console.log('result', result);
+    });
+  }
+
+  private async setAPI () {
+    console.log('setAPI');
+    const wsProvider = new WsProvider('wss://ws.calamari.seabird.systems');
+    const api = await ApiPromise.create({ provider: wsProvider });
+
+    this.API = await api.isReady;
   }
 }

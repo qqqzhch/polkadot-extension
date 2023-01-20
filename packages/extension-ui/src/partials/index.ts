@@ -7,3 +7,6 @@ export { default as Name } from './Name';
 export { default as Password } from './Password';
 export { default as HeaderWithSteps } from './HeaderWithSteps';
 export { default as AccountSelection } from './AccountSelection';
+export { default as HeaderWithback } from './HeaderWithback';
+export { default as Amount } from './Amount';
+export { default as PasswordTx } from './PasswordTx';

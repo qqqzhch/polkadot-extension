@@ -148,7 +148,9 @@ function Account ({ address, className, genesisHash, isExternal, isHardware, isH
         suri={suri}
         toggleActions={toggleActions}
       >
-        <Blance address={address}></Blance>
+        <Link to={`/transaction/send/${address}`}>
+          <Blance address={address}></Blance>
+        </Link>
         {isEditing && (
           <Name
             address={address}
@@ -161,6 +163,7 @@ function Account ({ address, className, genesisHash, isExternal, isHardware, isH
 
         )}
       </Address>
+
     </div>
   );
 }

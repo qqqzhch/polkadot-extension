@@ -6,8 +6,9 @@ import type { KeyringPair, KeyringPair$Json, KeyringPair$Meta } from '@polkadot/
 import type { Registry, SignerPayloadJSON, SignerPayloadRaw } from '@polkadot/types/types';
 import type { SubjectInfo } from '@polkadot/ui-keyring/observable/types';
 import type { KeypairType } from '@polkadot/util-crypto/types';
-import type { AccountJson, AllowedPath, AuthorizeRequest, MessageTypes, MetadataRequest, RequestAccountBatchExport, RequestAccountChangePassword, RequestAccountCreateExternal, RequestAccountCreateHardware, RequestAccountCreateSuri, RequestAccountEdit, RequestAccountExport, RequestAccountForget, RequestAccountShow, RequestAccountTie, RequestAccountValidate, RequestActiveTabsUrlUpdate, RequestAuthorizeApprove, RequestBatchRestore, RequestDeriveCreate, RequestDeriveValidate, RequestJsonRestore, RequestMetadataApprove, RequestMetadataReject, RequestSeedCreate, RequestSeedValidate, RequestSigningApprovePassword, RequestSigningApproveSignature, RequestSigningCancel, RequestSigningIsLocked, RequestTypes, RequestUpdateAuthorizedAccounts, ResponseAccountExport, ResponseAccountsExport, ResponseAuthorizeList, ResponseDeriveValidate, ResponseJsonGetAccountInfo, ResponseSeedCreate, ResponseSeedValidate, ResponseSigningIsLocked, ResponseType, SigningRequest } from '../types';
+import type { AccountJson, AllowedPath, AuthorizeRequest, MessageTypes, MetadataRequest, RequestAccountBatchExport, RequestAccountChangePassword, RequestAccountCreateExternal, RequestAccountCreateHardware, RequestAccountCreateSuri, RequestAccountEdit, RequestAccountExport, RequestAccountForget, RequestAccountShow, RequestAccountTie, RequestAccountValidate, RequestActiveTabsUrlUpdate, RequestAuthorizeApprove, RequestBatchRestore, RequestDeriveCreate, RequestDeriveValidate, RequestJsonRestore, RequestMetadataApprove, RequestMetadataReject, RequestSeedCreate, RequestSeedValidate, RequestSigningApprovePassword, RequestSigningApproveSignature, RequestSigningCancel, RequestSigningIsLocked, RequestTransactionSend, RequestTypes, RequestUpdateAuthorizedAccounts, ResponseAccountExport, ResponseAccountsExport, ResponseAuthorizeList, ResponseDeriveValidate, ResponseJsonGetAccountInfo, ResponseSeedCreate, ResponseSeedValidate, ResponseSigningIsLocked, ResponseType, SigningRequest } from '../types';
 
+import { ApiPromise } from '@polkadot/api';
 import { ALLOWED_PATH, PASSWORD_EXPIRY_MS } from '@polkadot/extension-base/defaults';
 import { metadataExpand } from '@polkadot/extension-chains';
 import { TypeRegistry } from '@polkadot/types';
@@ -19,6 +20,7 @@ import { keyExtractSuri, mnemonicGenerate, mnemonicValidate } from '@polkadot/ut
 import { withErrorLog } from './helpers';
 import State, { AuthorizedAccountsDiff } from './State';
 import { createSubscription, unsubscribe } from './subscriptions';
+import SendTransaction from './transactionSend';
 
 type CachedUnlocks = Record<string, number>;
 
@@ -531,9 +533,35 @@ export default class Extension {
     return this.#state.getConnectedTabsUrl();
   }
 
+  private async transactionSend ({ amount, from, password, to }: RequestTransactionSend): Promise<string> {
+    const keypair = keyring.getPair(from);
+
+    if (keypair.isLocked && !password) {
+      throw new Error('Password needed to unlock the account');
+    }
+
+    if (keypair.isLocked) {
+      keypair.decodePkcs8(password);
+    }
+
+    const api = this.#state.API;
+    const tahash = await SendTransaction({ amount, api, from, keypair, to });
+
+    return tahash;
+  }
+
+  private getApiPromise (): ApiPromise {
+    console.log('getApiPromise');
+    const api = this.#state.API;
+
+    return api;
+  }
+
   // Weird thought, the eslint override is not needed in Tabs
   // eslint-disable-next-line @typescript-eslint/require-await
   public async handle<TMessageType extends MessageTypes> (id: string, type: TMessageType, request: RequestTypes[TMessageType], port?: chrome.runtime.Port): Promise<ResponseType<TMessageType>> {
+    console.log('handle', type);
+
     switch (type) {
       case 'pri(authorize.approve)':
         return this.authorizeApprove(request as RequestAuthorizeApprove);
@@ -651,9 +679,12 @@ export default class Extension {
 
       case 'pri(signing.requests)':
         return port && this.signingSubscribe(id, port);
-
       case 'pri(window.open)':
         return this.windowOpen(request as AllowedPath);
+      case 'pri(transaction.send)':
+        return this.transactionSend(request as RequestTransactionSend);
+      case 'pri(get.apipromise)':
+        return this.getApiPromise();
 
       default:
         throw new Error(`Unable to handle message of type ${type}`);

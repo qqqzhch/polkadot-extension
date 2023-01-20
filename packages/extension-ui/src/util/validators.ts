@@ -42,6 +42,22 @@ export function isNotShorterThan (minLength: number, errorText: string): Validat
   };
 }
 
+export function isNumberGreaterThan0AndLessThan (max: number, errorText: string): Validator<string> {
+  return (value: string): Result<string> => {
+    const num = parseFloat(value);
+
+    if (isNaN(num)) {
+      return Result.error(errorText);
+    }
+
+    if (num < 0 || num > max) {
+      return Result.error(errorText);
+    }
+
+    return Result.ok(value);
+  };
+}
+
 export function isSameAs <T> (expectedValue: T, errorText: string): Validator<T> {
   return (value: T): Result<T> => {
     return value !== expectedValue

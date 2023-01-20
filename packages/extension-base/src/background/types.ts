@@ -11,6 +11,8 @@ import type { KeyringPairs$Json } from '@polkadot/ui-keyring/types';
 import type { HexString } from '@polkadot/util/types';
 import type { KeypairType } from '@polkadot/util-crypto/types';
 
+import { ApiPromise } from '@polkadot/api';
+
 import { ALLOWED_PATH } from '../defaults';
 import { AuthResponse, AuthUrls } from './handlers/State';
 
@@ -136,6 +138,8 @@ export interface RequestSignatures {
   'pub(rpc.subscribe)': [RequestRpcSubscribe, number, JsonRpcResponse];
   'pub(rpc.subscribeConnected)': [null, boolean, boolean];
   'pub(rpc.unsubscribe)': [RequestRpcUnsubscribe, boolean];
+  'pri(transaction.send)': [RequestTransactionSend, string];
+  'pri(get.apipromise)': [null, ApiPromise]
 }
 
 export type MessageTypes = keyof RequestSignatures;
@@ -232,6 +236,13 @@ export interface RequestAccountTie {
 
 export interface RequestAccountValidate {
   address: string;
+  password: string;
+}
+
+export interface RequestTransactionSend {
+  amount: string;
+  from: string;
+  to: string;
   password: string;
 }
 

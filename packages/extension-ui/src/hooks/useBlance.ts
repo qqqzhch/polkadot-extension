@@ -7,6 +7,7 @@ import React, { useCallback, useContext, useEffect, useMemo, useState } from 're
 
 import { ApiPromise, WsProvider } from '@polkadot/api';
 
+import { getApipromise } from '../messaging';
 import AssetType from '../types/AssetType';
 import Balance from '../types/Balance';
 
@@ -34,6 +35,8 @@ const fetchPublicBalance = async (address: string, assetType: AssetType, api: Ap
   if (!api?.isConnected || !address || !assetType) {
     return null;
   }
+
+  // const {data: balance } = await api.query.system.account(address);
 
   const balanceRaw = await MantaUtilities.getPublicBalance(
     api, new BN(assetType.assetId), address

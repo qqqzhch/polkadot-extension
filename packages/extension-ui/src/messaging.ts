@@ -9,6 +9,7 @@ import type { KeyringPairs$Json } from '@polkadot/ui-keyring/types';
 import type { HexString } from '@polkadot/util/types';
 import type { KeypairType } from '@polkadot/util-crypto/types';
 
+import { ApiPromise } from '@polkadot/api';
 import { PORT_EXTENSION } from '@polkadot/extension-base/defaults';
 import { getId } from '@polkadot/extension-base/utils/getId';
 import { metadataExpand } from '@polkadot/extension-chains';
@@ -137,6 +138,14 @@ export async function createSeed (length?: SeedLengths, seed?: string, type?: Ke
 
 export async function getAllMetadata (): Promise<MetadataDef[]> {
   return sendMessage('pri(metadata.list)');
+}
+
+export async function transactionSend (from: string, to: string, amount: string, password: string): Promise<string> {
+  return sendMessage('pri(transaction.send)', { amount, from, password, to });
+}
+
+export async function getApipromise (): Promise<ApiPromise> {
+  return sendMessage('pri(get.apipromise)');
 }
 
 export async function getMetadata (genesisHash?: string | null, isPartial = false): Promise<Chain | null> {
