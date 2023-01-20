@@ -3,8 +3,8 @@
 
 import type { AccountJson } from '@polkadot/extension-base/background/types';
 
+import Bignumber from 'bignumber.js';
 import BN from 'bn.js';
-import { MantaUtilities } from 'manta.js-kg-dev/dist/index.js';
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
@@ -13,9 +13,10 @@ import { canDerive } from '@polkadot/extension-base/utils';
 import { ThemeProps } from '@polkadot/extension-ui/types';
 import { cryptoWaitReady } from '@polkadot/util-crypto';
 
-import useBlance from '../../hooks/useBlance';
+import useBalance from '../../hooks/useBalance';
 import AssetType from '../../types/AssetType';
 import Balance from '../../types/Balance';
+import display from '../../util/display';
 
 interface Props extends AccountJson {
   className?: string;
@@ -24,20 +25,37 @@ interface Props extends AccountJson {
 
 function Blance ({ address, children, className }: Props): React.ReactElement<Props> {
   // need chain name
-  const accountblance = useBlance({ address });
+  const accountbalance = useBalance({ address });
 
   return (<div
-    className='accountBlance'
+    className='accountBalance'
     style={{ marginLeft: 70 }}
   >
-    {accountblance ? accountblance.toDisplayString() : 'loading'}
+    <span className='balance'>
+      {accountbalance ? display(accountbalance) : 'loading'}
+    </span>
+    <span
+      className='send'
+      style={{ marginLeft: 70 }}
+    >
+    send
+    </span>
+
   </div>);
 }
 
 export default styled(Blance)(({ theme }: ThemeProps) => `
  // todo why not work 
-  .accountBlance {
+  .accountBalance {
     margin-left: 50px;
+  }
+  .balance{
+    display: inline-block;
+    width: 100px;
+  }
+  .send{
+    display: inline-block;
+    width: 100px;
   }
 
 `);

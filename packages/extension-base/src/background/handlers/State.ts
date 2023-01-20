@@ -11,6 +11,7 @@ import { ApiPromise, WsProvider } from '@polkadot/api';
 import { getId } from '@polkadot/extension-base/utils/getId';
 import { addMetadata, knownMetadata } from '@polkadot/extension-chains';
 import { knownGenesis } from '@polkadot/networks/defaults';
+import keyring from '@polkadot/ui-keyring';
 import settings from '@polkadot/ui-settings';
 import { assert } from '@polkadot/util';
 
@@ -164,6 +165,7 @@ export default class State {
   public readonly signSubject: BehaviorSubject<SigningRequest[]> = new BehaviorSubject<SigningRequest[]>([]);
 
   public defaultAuthAccountSelection: string[] = [];
+  public addressBalance: Record<string, any> = {};
 
   constructor (providers: Providers = {}) {
     this.#providers = providers;
@@ -601,5 +603,22 @@ export default class State {
     const api = await ApiPromise.create({ provider: wsProvider });
 
     this.API = await api.isReady;
+    console.log('setAPI set up');
+    await this.getCacheBalance();
+  }
+
+  private async getCacheBalance () {
+    const accounts = keyring.getAccounts() || [];
+    // eslint-disable-next-line  @typescript-eslint/no-this-alias
+    const that = this;
+
+    return await this.API.rpc.chain.subscribeNewHeads((lastHeader) => {
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      accounts.forEach(async ({ address }) => {
+        const { data: balance } = await that.API.query.system.account(address);
+
+        that.addressBalance[address] = balance as object;
+      });
+    });
   }
 }

@@ -3,7 +3,9 @@
 
 import React, { useCallback, useState } from 'react';
 
+import useBalance from '../hooks/useBalance';
 import { Amount, PasswordTx } from '../partials';
+import display from '../util/display';
 import { BackButton, ButtonArea, NextStepButton, VerticalSpace } from '.';
 
 interface Props {
@@ -13,11 +15,15 @@ interface Props {
   onCreate: (name: string|null, password: string|null) => void | Promise<void | boolean>;
   onAmountChange: (name: string) => void;
   onPasswordChange?: (password: string) => void;
+  address: string;
 }
 
-function Filltransaction ({ buttonLabel, isBusy, onAmountChange, onBackClick, onCreate, onPasswordChange }: Props): React.ReactElement<Props> {
+function Filltransaction ({ address, buttonLabel, isBusy, onAmountChange, onBackClick, onCreate, onPasswordChange }: Props): React.ReactElement<Props> {
   const [amount, setAmount] = useState<string | null>(null);
   const [password, setPassword] = useState<string | null>(null);
+  const balance = useBalance({ address });
+
+  console.log('Filltransaction balance');
 
   const _onCreate = useCallback(
     () => onCreate(amount, password),
@@ -57,6 +63,9 @@ function Filltransaction ({ buttonLabel, isBusy, onAmountChange, onBackClick, on
         isFocused
         onChange={_onAmountChange}
       />
+      <div style={{ marginLeft: 15 }}>
+      Balance:{balance ? display(balance) : 'loading'}
+      </div>
       <PasswordTx
         onChange={_onPasswordChange}
       ></PasswordTx>

@@ -139,7 +139,8 @@ export interface RequestSignatures {
   'pub(rpc.subscribeConnected)': [null, boolean, boolean];
   'pub(rpc.unsubscribe)': [RequestRpcUnsubscribe, boolean];
   'pri(transaction.send)': [RequestTransactionSend, string];
-  'pri(get.apipromise)': [null, ApiPromise]
+  'pri(get.apipromise)': [null, ApiPromise],
+  'pri(get.getBalance)': [RequestAccountInfo, object]
 }
 
 export type MessageTypes = keyof RequestSignatures;
@@ -221,6 +222,10 @@ export interface RequestAccountEdit {
 }
 
 export interface RequestAccountForget {
+  address: string;
+}
+
+export interface RequestAccountInfo {
   address: string;
 }
 

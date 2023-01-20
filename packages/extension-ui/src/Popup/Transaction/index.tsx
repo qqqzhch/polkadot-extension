@@ -2,12 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import BN from 'bn.js';
-import { MantaUtilities } from 'manta.js-kg-dev/dist/index.js';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import styled from 'styled-components';
 
-import { ApiPromise, WsProvider } from '@polkadot/api';
 import { AccountWithChildren } from '@polkadot/extension-base/background/types';
 import { enable, handleResponse, redirectIfPhishing } from '@polkadot/extension-base/page';
 import { Null } from '@polkadot/types';
@@ -137,6 +135,7 @@ function SendTransaction ({ className }: Props): React.ReactElement {
             value={toAddress}
           />
           <Filltransaction
+            address={urlinfo?.account}
             buttonLabel={t<string>('Send')}
             isBusy={isBusy}
             onAmountChange={setAmounts}

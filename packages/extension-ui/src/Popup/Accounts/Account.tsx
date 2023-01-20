@@ -14,7 +14,7 @@ import useGenesisHashOptions from '../../hooks/useGenesisHashOptions';
 import useTranslation from '../../hooks/useTranslation';
 import { editAccount, tieAccount } from '../../messaging';
 import { Name } from '../../partials';
-import Blance from './Blance';
+import Balance from './Balance';
 
 interface Props extends AccountJson {
   className?: string;
@@ -149,7 +149,7 @@ function Account ({ address, className, genesisHash, isExternal, isHardware, isH
         toggleActions={toggleActions}
       >
         <Link to={`/transaction/send/${address}`}>
-          <Blance address={address}></Blance>
+          <Balance address={address}></Balance>
         </Link>
         {isEditing && (
           <Name

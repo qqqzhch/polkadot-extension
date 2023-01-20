@@ -102,7 +102,7 @@ function MenuSettings ({ className, reference }: Props): React.ReactElement<Prop
           uncheckedLabel={t<string>('Light')}
         />
       </MenuItem>
-      <MenuItem
+      {/* <MenuItem
         className='setting'
         title={t<string>('Display address format for')}
       >
@@ -113,7 +113,7 @@ function MenuSettings ({ className, reference }: Props): React.ReactElement<Prop
           options={prefixOptions}
           value={`${prefix}`}
         />
-      </MenuItem>
+      </MenuItem> */}
       <MenuItem
         className='setting'
         title={t<string>('Language')}

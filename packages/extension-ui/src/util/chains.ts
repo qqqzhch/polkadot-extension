@@ -8,6 +8,7 @@ import { selectableNetworks } from '@polkadot/networks';
 // https://github.com/paritytech/ss58-registry/blob/HEAD/ss58-registry.json
 
 // add manta network  to selectableNetworks
+
 const selectableNetworksNew = selectableNetworks.concat({
   decimals: [9],
   displayName: 'Dolphin',
@@ -25,7 +26,7 @@ const selectableNetworksNew = selectableNetworks.concat({
 
 });
 const hashes: MetadataDefBase[] = selectableNetworksNew
-  .filter(({ genesisHash }) => !!genesisHash.length)
+  .filter(({ genesisHash, network }) => !!genesisHash.length && network === 'Dolphin')
   .map((network) => ({
     chain: network.displayName,
     genesisHash: network.genesisHash[0],

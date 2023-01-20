@@ -148,6 +148,10 @@ export async function getApipromise (): Promise<ApiPromise> {
   return sendMessage('pri(get.apipromise)');
 }
 
+export async function getBalance (address: string): Promise<object> {
+  return sendMessage('pri(get.getBalance)', { address });
+}
+
 export async function getMetadata (genesisHash?: string | null, isPartial = false): Promise<Chain | null> {
   if (!genesisHash) {
     return null;
