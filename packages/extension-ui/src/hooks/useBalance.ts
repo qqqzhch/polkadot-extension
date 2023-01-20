@@ -29,6 +29,8 @@ export default function useBlance ({ address }: Props): string|null {
 
       const data = await getBalance(address);
 
+      console.log(address, data);
+
       // eslint-disable-next-line  @typescript-eslint/no-unsafe-argument
       setaccountblance(data.free);
     };
@@ -38,7 +40,7 @@ export default function useBlance ({ address }: Props): string|null {
     const Intervalflag = setInterval(() => {
       // eslint-disable-next-line  @typescript-eslint/no-floating-promises
       getuserinfo();
-    }, 1000 * 10);
+    }, 1000 * 5);
 
     return () => {
       clearInterval(Intervalflag);

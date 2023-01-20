@@ -32,7 +32,7 @@ function Blance ({ address, children, className }: Props): React.ReactElement<Pr
     style={{ marginLeft: 70 }}
   >
     <span className='balance'>
-      {accountbalance ? display(accountbalance) : 'loading'}
+      {accountbalance !== undefined ? display(accountbalance) : 'loading'}
     </span>
     <span
       className='send'

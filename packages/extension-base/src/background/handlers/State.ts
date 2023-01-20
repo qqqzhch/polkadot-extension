@@ -12,6 +12,7 @@ import { getId } from '@polkadot/extension-base/utils/getId';
 import { addMetadata, knownMetadata } from '@polkadot/extension-chains';
 import { knownGenesis } from '@polkadot/networks/defaults';
 import keyring from '@polkadot/ui-keyring';
+import { accounts as accountsObservable } from '@polkadot/ui-keyring/observable/accounts';
 import settings from '@polkadot/ui-settings';
 import { assert } from '@polkadot/util';
 
@@ -608,11 +609,14 @@ export default class State {
   }
 
   private async getCacheBalance () {
-    const accounts = keyring.getAccounts() || [];
     // eslint-disable-next-line  @typescript-eslint/no-this-alias
     const that = this;
 
     return await this.API.rpc.chain.subscribeNewHeads((lastHeader) => {
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      console.log('this.API.rpc.chain.subscribeNewHeads');
+      const accounts = keyring.getAccounts() || [];
+
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
       accounts.forEach(async ({ address }) => {
         const { data: balance } = await that.API.query.system.account(address);
