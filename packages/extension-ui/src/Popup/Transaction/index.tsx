@@ -115,7 +115,7 @@ function SendTransaction ({ className }: Props): React.ReactElement {
   );
 
   return (
-    <>
+    <div className={className}>
       <HeaderWithback
         text={t<string>('Send transaction')}
       />
@@ -144,7 +144,7 @@ function SendTransaction ({ className }: Props): React.ReactElement {
           />
         </>
       </Loading>
-    </>
+    </div>
   );
 }
 

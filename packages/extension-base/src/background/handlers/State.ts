@@ -1,6 +1,8 @@
 // Copyright 2019-2023 @polkadot/extension-bg authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
+import '@polkadot/api-augment';
+
 import type { MetadataDef, ProviderMeta } from '@polkadot/extension-inject/types';
 import type { JsonRpcResponse, ProviderInterface, ProviderInterfaceCallback } from '@polkadot/rpc-provider/types';
 import type { AccountJson, AuthorizeRequest, MetadataRequest, RequestAuthorizeTab, RequestRpcSend, RequestRpcSubscribe, RequestRpcUnsubscribe, RequestSign, ResponseRpcListProviders, ResponseSigning, SigningRequest } from '../types';
@@ -11,6 +13,8 @@ import { ApiPromise, WsProvider } from '@polkadot/api';
 import { getId } from '@polkadot/extension-base/utils/getId';
 import { addMetadata, knownMetadata } from '@polkadot/extension-chains';
 import { knownGenesis } from '@polkadot/networks/defaults';
+import { Balance } from '@polkadot/types/interfaces';
+import { PalletBalancesAccountData } from '@polkadot/types/lookup';
 import keyring from '@polkadot/ui-keyring';
 import { accounts as accountsObservable } from '@polkadot/ui-keyring/observable/accounts';
 import settings from '@polkadot/ui-settings';
@@ -166,7 +170,7 @@ export default class State {
   public readonly signSubject: BehaviorSubject<SigningRequest[]> = new BehaviorSubject<SigningRequest[]>([]);
 
   public defaultAuthAccountSelection: string[] = [];
-  public addressBalance: Record<string, any> = {};
+  public addressBalance: Record<string, PalletBalancesAccountData> = {};
 
   constructor (providers: Providers = {}) {
     this.#providers = providers;
@@ -621,7 +625,7 @@ export default class State {
       accounts.forEach(async ({ address }) => {
         const { data: balance } = await that.API.query.system.account(address);
 
-        that.addressBalance[address] = balance as object;
+        that.addressBalance[address] = balance;
       });
     });
   }

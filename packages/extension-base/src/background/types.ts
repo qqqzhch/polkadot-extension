@@ -12,6 +12,7 @@ import type { HexString } from '@polkadot/util/types';
 import type { KeypairType } from '@polkadot/util-crypto/types';
 
 import { ApiPromise } from '@polkadot/api';
+import { PalletBalancesAccountData } from '@polkadot/types/lookup';
 
 import { ALLOWED_PATH } from '../defaults';
 import { AuthResponse, AuthUrls } from './handlers/State';
@@ -140,7 +141,7 @@ export interface RequestSignatures {
   'pub(rpc.unsubscribe)': [RequestRpcUnsubscribe, boolean];
   'pri(transaction.send)': [RequestTransactionSend, string];
   'pri(get.apipromise)': [null, ApiPromise],
-  'pri(get.getBalance)': [RequestAccountInfo, object]
+  'pri(get.getBalance)': [RequestAccountInfo, PalletBalancesAccountData|null]
 }
 
 export type MessageTypes = keyof RequestSignatures;

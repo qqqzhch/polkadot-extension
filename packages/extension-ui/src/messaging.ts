@@ -14,6 +14,7 @@ import { PORT_EXTENSION } from '@polkadot/extension-base/defaults';
 import { getId } from '@polkadot/extension-base/utils/getId';
 import { metadataExpand } from '@polkadot/extension-chains';
 import { MetadataDef } from '@polkadot/extension-inject/types';
+import { PalletBalancesAccountData } from '@polkadot/types/lookup';
 
 import allChains from './util/chains';
 import { getSavedMeta, setSavedMeta } from './MetadataCache';
@@ -148,7 +149,7 @@ export async function getApipromise (): Promise<ApiPromise> {
   return sendMessage('pri(get.apipromise)');
 }
 
-export async function getBalance (address: string): Promise<object> {
+export async function getBalance (address: string): Promise<PalletBalancesAccountData|null> {
   return sendMessage('pri(get.getBalance)', { address });
 }
 

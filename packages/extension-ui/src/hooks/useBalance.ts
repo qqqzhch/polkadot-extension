@@ -6,7 +6,7 @@ import React, { useCallback, useContext, useEffect, useMemo, useState } from 're
 
 import { ApiPromise, WsProvider } from '@polkadot/api';
 
-import { getApipromise, getBalance } from '../messaging';
+import { getBalance } from '../messaging';
 import AssetType from '../types/AssetType';
 import Balance from '../types/Balance';
 
@@ -32,7 +32,9 @@ export default function useBlance ({ address }: Props): string|null {
       console.log(address, data);
 
       // eslint-disable-next-line  @typescript-eslint/no-unsafe-argument
-      setaccountblance(data.free);
+      if (data !== null) {
+        setaccountblance(data.free.toString());
+      }
     };
 
     // eslint-disable-next-line  @typescript-eslint/no-floating-promises

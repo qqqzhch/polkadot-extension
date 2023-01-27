@@ -2,10 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import React, { useCallback, useState } from 'react';
+import styled from 'styled-components';
 
 import useBalance from '../hooks/useBalance';
 import { Amount, PasswordTx } from '../partials';
 import display from '../util/display';
+import Label from './Label';
 import { BackButton, ButtonArea, NextStepButton, VerticalSpace } from '.';
 
 interface Props {
@@ -16,9 +18,10 @@ interface Props {
   onAmountChange: (name: string) => void;
   onPasswordChange?: (password: string) => void;
   address: string;
+  className?: string;
 }
 
-function Filltransaction ({ address, buttonLabel, isBusy, onAmountChange, onBackClick, onCreate, onPasswordChange }: Props): React.ReactElement<Props> {
+function Filltransaction ({ address, buttonLabel, className, isBusy, onAmountChange, onBackClick, onCreate, onPasswordChange }: Props): React.ReactElement<Props> {
   const [amount, setAmount] = useState<string | null>(null);
   const [password, setPassword] = useState<string | null>(null);
   const balance = useBalance({ address });
@@ -58,13 +61,18 @@ function Filltransaction ({ address, buttonLabel, isBusy, onAmountChange, onBack
   );
 
   return (
-    <>
+    <div className={className}>
       <Amount
         isFocused
         onChange={_onAmountChange}
       />
-      <div style={{ marginLeft: 15 }}>
-      Balance:{balance !== undefined ? display(balance) : 'loading'}
+      <div>
+        <Label
+          className='balance'
+          label='Balance:'
+        >
+          {balance !== null ? display(balance) : 'loading'}
+        </Label>
       </div>
       <PasswordTx
         onChange={_onPasswordChange}
@@ -82,8 +90,16 @@ function Filltransaction ({ address, buttonLabel, isBusy, onAmountChange, onBack
           </NextStepButton>
         </ButtonArea>
       )}
-    </>
+    </div>
   );
 }
 
-export default React.memo(Filltransaction);
+export default React.memo(styled(Filltransaction)`
+  
+  .balance{
+    margin-bottom: 10px;
+    font-size: 14px;
+    line-height: 14px;
+  }
+  
+`);

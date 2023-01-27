@@ -12,6 +12,7 @@ import { ApiPromise } from '@polkadot/api';
 import { ALLOWED_PATH, PASSWORD_EXPIRY_MS } from '@polkadot/extension-base/defaults';
 import { metadataExpand } from '@polkadot/extension-chains';
 import { TypeRegistry } from '@polkadot/types';
+import { PalletBalancesAccountData } from '@polkadot/types/lookup';
 import keyring from '@polkadot/ui-keyring';
 import { accounts as accountsObservable } from '@polkadot/ui-keyring/observable/accounts';
 import { assert, isHex } from '@polkadot/util';
@@ -557,11 +558,11 @@ export default class Extension {
     return api;
   }
 
-  private getBalance ({ address }: RequestAccountInfo): object {
+  private getBalance ({ address }: RequestAccountInfo): PalletBalancesAccountData|null {
     if (this.#state.addressBalance[address] !== undefined) {
-      return this.#state.addressBalance[address] as object;
+      return this.#state.addressBalance[address];
     } else {
-      return '';
+      return null;
     }
   }
 
@@ -691,8 +692,6 @@ export default class Extension {
         return this.windowOpen(request as AllowedPath);
       case 'pri(transaction.send)':
         return this.transactionSend(request as RequestTransactionSend);
-      case 'pri(get.apipromise)':
-        return this.getApiPromise();
       case 'pri(get.getBalance)':
         return this.getBalance(request as RequestAccountInfo);
       default:

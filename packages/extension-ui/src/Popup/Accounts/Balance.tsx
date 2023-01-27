@@ -15,7 +15,7 @@ import { cryptoWaitReady } from '@polkadot/util-crypto';
 
 import useBalance from '../../hooks/useBalance';
 import AssetType from '../../types/AssetType';
-import Balance from '../../types/Balance';
+// import Balance from '../../types/Balance';
 import display from '../../util/display';
 
 interface Props extends AccountJson {
@@ -23,23 +23,22 @@ interface Props extends AccountJson {
   parentName?: string;
 }
 
-function Blance ({ address, children, className }: Props): React.ReactElement<Props> {
+function Balance ({ address, children, className }: Props): React.ReactElement<Props> {
   // need chain name
   const accountbalance = useBalance({ address });
 
   return (<div
-    className='accountBalance'
-    style={{ marginLeft: 70 }}
+    className={className}
   >
     <span
       className='balance'
-      style={{ display: 'inline-block', width: 300 }}
+
     >
-      {accountbalance !== undefined ? display(accountbalance) : 'loading'}
+      {accountbalance !== null ? display(accountbalance) : 'loading'}
     </span>
     <span
       className='send'
-      style={{ marginLeft: 5 }}
+
     >
     send
     </span>
@@ -47,14 +46,11 @@ function Blance ({ address, children, className }: Props): React.ReactElement<Pr
   </div>);
 }
 
-export default styled(Blance)(({ theme }: ThemeProps) => `
- // todo why not work 
-  .accountBalance {
-    margin-left: 50px;
-  }
+export default styled(Balance)(({ theme }: ThemeProps) => `
+  margin-left: 70px;
   .balance{
     display: inline-block;
-    width: 100px;
+    width: 250px;
   }
   .send{
     display: inline-block;
