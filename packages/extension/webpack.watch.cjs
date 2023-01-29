@@ -8,4 +8,4 @@ module.exports = createConfig({
   content: './src/content.ts',
   extension: './src/extension.ts',
   page: './src/page.ts'
-});
+},undefined,true);

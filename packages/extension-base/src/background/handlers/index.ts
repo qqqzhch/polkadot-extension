@@ -11,13 +11,19 @@ import State from './State';
 import Tabs from './Tabs';
 
 const state = new State();
-const extension = new Extension(state);
-const tabs = new Tabs(state);
+
 
 export default function handler<TMessageType extends MessageTypes> ({ id, message, request }: TransportRequestMessage<TMessageType>, port?: chrome.runtime.Port, extensionPortName = PORT_EXTENSION): void {
   const isExtension = !port || port?.name === extensionPortName;
 
   const sender = port?.sender as chrome.runtime.MessageSender;
+  state.ready()
+  .then(()=>{
+    const extension = new Extension(state);
+    const tabs = new Tabs(state);
+
+  
+  
 
   const from = isExtension
     ? 'extension'
@@ -48,4 +54,6 @@ export default function handler<TMessageType extends MessageTypes> ({ id, messag
         port.postMessage({ error: error.message, id });
       }
     });
+    
+  })
 }

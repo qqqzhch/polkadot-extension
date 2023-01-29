@@ -10,6 +10,7 @@ const { blake2AsHex } = require('@polkadot/util-crypto');
 
 const pkgJson = require('./package.json');
 const manifest = require('./manifest.json');
+const manifestV3 = require('./manifestv3.json');
 
 const EXT_NAME = manifest.short_name;
 
@@ -22,7 +23,7 @@ const packages = [
   'extension-ui'
 ];
 
-module.exports = (entry, alias = {}) => ({
+module.exports = (entry, alias = {},isV3=false) => ({
   context: __dirname,
   devtool: false,
   entry,
@@ -75,13 +76,14 @@ module.exports = (entry, alias = {}) => ({
       'process.env': {
         EXTENSION_PREFIX: JSON.stringify(process.env.EXTENSION_PREFIX || EXT_NAME),
         NODE_ENV: JSON.stringify('production'),
-        PORT_PREFIX: JSON.stringify(blake2AsHex(JSON.stringify(manifest), 64))
+        PORT_PREFIX: JSON.stringify(blake2AsHex(JSON.stringify(manifest), 64)),
+        MANIFESTV3:isV3
       }
     }),
     new CopyPlugin({ patterns: [{ from: 'public' }] }),
     new ManifestPlugin({
       config: {
-        base: manifest,
+        base: isV3?manifestV3:manifest,
         extend: {
           version: pkgJson.version.split('-')[0] // remove possible -beta.xx
         }

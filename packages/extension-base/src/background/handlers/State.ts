@@ -15,6 +15,7 @@ import { assert } from '@polkadot/util';
 
 import { MetadataStore } from '../../stores';
 import { withErrorLog } from './helpers';
+import getLocalStorage from './localStorageV3.js'
 
 interface Resolver<T> {
   reject: (error: Error) => void;
@@ -69,7 +70,7 @@ interface SignRequest extends Resolver<ResponseSigning> {
   url: string;
 }
 
-const NOTIFICATION_URL = chrome.extension.getURL('notification.html');
+const NOTIFICATION_URL = chrome.runtime.getURL('notification.html');
 
 const POPUP_WINDOW_OPTS: chrome.windows.CreateData = {
   focused: true,
@@ -132,8 +133,11 @@ function extractMetadata (store: MetadataStore): void {
   });
 }
 
+
+
+
 export default class State {
-  readonly #authUrls: AuthUrls = {};
+  #authUrls: AuthUrls = {};
 
   readonly #authRequests: Record<string, AuthRequest> = {};
 
@@ -168,19 +172,22 @@ export default class State {
 
     extractMetadata(this.#metaStore);
 
+  }
+  public async ready():Promise<boolean>{
     // retrieve previously set authorizations
-    const authString = localStorage.getItem(AUTH_URLS_KEY) || '{}';
+    const authString = await getLocalStorage().getItem(AUTH_URLS_KEY) || '{}';
     const previousAuth = JSON.parse(authString) as AuthUrls;
 
     this.#authUrls = previousAuth;
 
     // retrieve previously set default auth accounts
-    const defaultAuthString = localStorage.getItem(DEFAULT_AUTH_ACCOUNTS) || '[]';
+    const defaultAuthString = await getLocalStorage().getItem(DEFAULT_AUTH_ACCOUNTS) || '[]';
     const previousDefaultAuth = JSON.parse(defaultAuthString) as string[];
 
     this.defaultAuthAccountSelection = previousDefaultAuth;
+    return true;
   }
-
+  
   public get knownMetadata (): MetadataDef[] {
     return knownMetadata();
   }
@@ -300,11 +307,11 @@ export default class State {
   }
 
   private saveCurrentAuthList () {
-    localStorage.setItem(AUTH_URLS_KEY, JSON.stringify(this.#authUrls));
+    getLocalStorage().setItem(AUTH_URLS_KEY, JSON.stringify(this.#authUrls));
   }
 
   private saveDefaultAuthAccounts () {
-    localStorage.setItem(DEFAULT_AUTH_ACCOUNTS, JSON.stringify(this.defaultAuthAccountSelection));
+    getLocalStorage().setItem(DEFAULT_AUTH_ACCOUNTS, JSON.stringify(this.defaultAuthAccountSelection));
   }
 
   public updateDefaultAuthAccounts (newList: string[]) {
